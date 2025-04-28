@@ -1,0 +1,105 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Resource",
+    "type": "object",
+    "required": [
+      "add_date",
+      "category",
+      "cons",
+      "description",
+      "features",
+      "name",
+      "other_urls",
+      "price",
+      "pricing",
+      "pros",
+      "resource_last_updated_at",
+      "tags",
+      "title",
+      "updated_date",
+      "url",
+      "use_cases"
+    ],
+    "properties": {
+      "add_date": {
+        "type": "string",
+        "format": "partial-date-time"
+      },
+      "category": {
+        "$ref": "#/definitions/Category"
+      },
+      "cons": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "description": {
+        "type": "string"
+      },
+      "features": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "name": {
+        "type": "string"
+      },
+      "other_urls": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "price": {
+        "type": "string"
+      },
+      "pricing": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "pros": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "resource_last_updated_at": {
+        "type": "string",
+        "format": "partial-date-time"
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "title": {
+        "type": "string"
+      },
+      "updated_date": {
+        "type": "string",
+        "format": "partial-date-time"
+      },
+      "url": {
+        "type": "string"
+      },
+      "use_cases": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "definitions": {
+      "Category": {
+        "type": "string",
+        "enum": [
+          "Observability"
+        ]
+      }
+    }
+  }

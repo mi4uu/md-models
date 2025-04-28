@@ -50,9 +50,10 @@ pub async fn query_openai(
     model: &str,
     multiple: bool,
     api_key: Option<String>,
+    endpoint:Option<String>,
 ) -> Result<Value, Box<dyn std::error::Error>> {
     let response_format = prepare_response_format(data_model, root, multiple)?;
-    let mut client = prepare_client(api_key)?;
+    let mut client = prepare_client(api_key, endpoint)?;
     let messages = vec![create_chat_message(pre_prompt), create_chat_message(prompt)];
     let req = chat_completion::ChatCompletionRequest::new(model.to_string(), messages)
         .response_format(response_format)
@@ -97,13 +98,22 @@ fn prepare_response_format(
     }
 }
 
-fn prepare_client(api_key: Option<String>) -> Result<OpenAIClient, Box<dyn std::error::Error>> {
+fn prepare_client(api_key: Option<String>, endpoint:Option<String>) -> Result<OpenAIClient, Box<dyn std::error::Error>> {
     let api_key = match api_key {
         Some(api_key) => api_key,
-        None => env::var("OPENAI_API_KEY")?,
+        None => env::var("OPENAI_API_KEY").unwrap_or(String::from("xxxx")),
     };
+    let endpoint = match endpoint {
+        Some(endpoint) => Some(endpoint),
+        None =>  env::var("OPENAI_BASE_URL").ok(),
+    };
+    match endpoint {
+        Some(endpoint)=>  OpenAIClient::builder().with_api_key(api_key).with_endpoint(endpoint).build(),
+        None=>  OpenAIClient::builder().with_api_key(api_key).build()
+    }
 
-    OpenAIClient::builder().with_api_key(api_key).build()
+
+  
 }
 
 fn create_chat_message(content: &str) -> chat_completion::ChatCompletionMessage {

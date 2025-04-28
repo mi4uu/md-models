@@ -25,12 +25,7 @@ use clap::{Parser, Subcommand};
 use colored::Colorize;
 use log::error;
 use mdmodels::{
-    datamodel::DataModel,
-    exporters::{render_jinja_template, Templates},
-    json::validation::validate_json,
-    linkml::export::serialize_linkml,
-    llm::extraction::query_openai,
-    pipeline::process_pipeline,
+    datamodel::DataModel, exporters::{render_jinja_template, Templates}, json::validation::validate_json, linkml::export::serialize_linkml, llm::extraction::query_openai, object::Object, pipeline::process_pipeline
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -60,6 +55,7 @@ enum Commands {
     Extract(ExtractArgs),
     /// Validate a dataset against a markdown model.
     Dataset(DatasetArgs),
+    New
 }
 
 /// Arguments for the validate subcommand.
@@ -233,6 +229,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         Commands::Dataset(args) => match args.command {
             DatasetCommands::Validate(args) => validate_ds(args),
         },
+        Commands::New=>{
+            println!("hi");
+            let o1=Object::new("category".to_string(), Some("eeee".to_string()));
+            let mut mys=DataModel::new(Some("name".into()), None);
+          mys.objects.append(&mut vec![o1]);
+       let rr= mys.json_schema(Some("joo".to_string()), true);
+            let r=rr.unwrap();
+            println!("{}",r);
+            Ok(())
+        }
     }
 }
 
@@ -296,7 +302,7 @@ fn query_llm(args: ExtractArgs) -> Result<(), Box<dyn Error>> {
         &root,
         &llm_model,
         args.multiple,
-        None,
+        None, None
     ))?;
 
     match args.output {
